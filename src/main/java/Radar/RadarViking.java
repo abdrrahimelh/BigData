@@ -1,9 +1,7 @@
 package Radar;
 
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
@@ -53,11 +51,18 @@ public class RadarViking {
         return true;
     }
 
+    private static String adaptDirection(String direction) {
+        if (direction.equals("Sortie fac")) return "1";
+        if (direction.equals("Entrée fac")) return "2";
+        return direction;
+    }
+
+    // CAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
     private static String adapt(String line){
         String[] tokens = line.split(",");
         String str = "";
-        str += tokens[6] + ",";
-        str += tokens[0] + ",";
+        str += "RADAR_VIKING";
+        str += adaptDirection(tokens[0]) + ",";
         str += tokens[1] + ",";
         str += ",";
         int h = Integer.parseInt(tokens[2]);
@@ -68,6 +73,7 @@ public class RadarViking {
         int c = s%100;
         str += hh + ":" + m + ":" + ss + ":" + c + ",";
         str += tokens[4].substring(2);
+        str += tokens[6] + ",";
         return str;
     }
 
@@ -80,7 +86,6 @@ public class RadarViking {
             if(isValid(line)){
                 context.write(new Text(tokens[1]), new Text(adapt(line)));
             }
-            // context.write(word, one);
         }
     }
 }

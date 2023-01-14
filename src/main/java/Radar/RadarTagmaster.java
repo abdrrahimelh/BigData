@@ -1,73 +1,81 @@
 package Radar;
 
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class RadarTagmaster {
-    private static boolean isValidDate(String day,  String hour, String sec){
-        int jour = Integer.parseInt(day);
-        if(jour > 31 || jour <= 0) return false;
-        if( hour.length() > 4 ) return false;
-        if( sec.length() > 4 ) return false;
-        int h = Integer.parseInt(hour);
-        int hh = h/100;
-        int m = h%100;
-        if(hh>=24 || hh<0) return false;
-        if(m>=60 || m<0) return false;
-        int s = Integer.parseInt(sec);
-        int ss = s/100;
-        if(ss>=60 || ss<0) return false;
-        return true;
+    private static boolean isValidDate(String horodate,  String centieme){
+        String[] date = horodate.split(" ")[0].split("/");
+        int jour = Integer.parseInt(date[0]);
+        int mois = Integer.parseInt(date[1]);
+        String[] time = horodate.split(" ")[1].split(":");
+        int heure = Integer.parseInt(time[0]);
+        int minutes = Integer.parseInt(time[1]);
+        int secondes = Integer.parseInt(time[2]);
+        return (jour >= 1 && jour <= 31) && (mois >= 1 && mois <= 12) &&
+                (heure >= 1 && heure <= 23) && (minutes >= 1 && minutes <= 59) &&
+                (secondes >= 1 && secondes <= 59);
     }
 
-    private static boolean isValidCategory(String ser, String type){
-        if(ser.length() != 6) return false;
-        int size = Integer.parseInt(ser.substring(2,6));
-        if(!( type.equals("2R") || type.equals("VL") || type.equals("PL"))) return false;
-        if(size <205 && !type.equals("2R")) return false;
-        if(  size >= 205 && size < 1140 && !type.equals("VL")) return false;
-        if(size >= 1140 && !type.equals("PL")) return false;
-        return true;
+    private static boolean isValidType(String type){
+        return type.startsWith("VL") || type.startsWith("2RM") ||
+                type.startsWith("PL") || type.equals("Bus") || type.equals("Deux roues");
     }
 
     private static boolean isValidDirection(String direction){
-        int sens = Integer.parseInt(direction);
-        return sens == 1 || sens == 2;
+        List<String> validDirections = Arrays.asList("1", "2", "Sortie fac", "Entrée fac");
+        return validDirections.contains(direction);
     }
 
     public static boolean isValid(String str) {
         String[] tokens = str.split(",");
-        if (tokens.length != 7)
+        if (tokens.length != 6) // or 7
             return false;
         try {
-            if(!isValidDirection(tokens[0])) return false;
-            if(!isValidDate(tokens[1], tokens[2], tokens[3])) return false;
-            if(!isValidCategory(tokens[5], tokens[6])) return false;
+            if(!isValidDirection(tokens[2])) return false;
+            if(!isValidDate(tokens[0], tokens[1])) return false;
+            if(!isValidType(tokens[5])) return false;
         } catch (Exception e) {
             return false;
         }
         return true;
     }
 
+    private static String adaptDirection(String direction) {
+        if (direction.equals("Sortie fac")) return "1";
+        if (direction.equals("Entrée fac")) return "2";
+        return direction;
+    }
+
+    private static String adaptDate(String horodate, String centime) {
+        String[] date = horodate.split(" ")[0].split("/");
+        String heure = horodate.split(" ")[1];
+        return date[0] + "," + date[1] + "/" + date[2] + "," + heure + ":" + centime;
+    }
+
+    private static String adaptType(String type) {
+        if (type.startsWith("VL")) return "VL";
+        if (type.startsWith("2RM")) return "2RM";
+        if (type.startsWith("PL")) return "PL";
+        if (type.equals("Bus")) return "PL";
+        if (type.equals("Deux roues")) return "2RM";
+        return type;
+    }
+
+    // CAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
     private static String adapt(String line){
         String[] tokens = line.split(",");
         String str = "";
-        str += tokens[6] + ",";
-        str += tokens[0] + ",";
-        str += tokens[1] + ",";
-        str += ",";
-        int h = Integer.parseInt(tokens[2]);
-        int s = Integer.parseInt(tokens[3]);
-        int hh = h/100;
-        int m = h%100;
-        int ss = s/100;
-        int c = s%100;
-        str += hh + ":" + m + ":" + ss + ":" + c + ",";
-        str += tokens[4].substring(2);
+        str += "RADAR_TAGMASTER";
+        str += adaptDirection(tokens[2]) + ",";
+        str += adaptDate(tokens[0], tokens[1]) + ",";
+        str += tokens[4] + ","; //vitesse
+        str += adaptType(tokens[5]) + ",";
+        str += tokens[3] + ",";
         return str;
     }
 
@@ -80,7 +88,6 @@ public class RadarTagmaster {
             if(isValid(line)){
                 context.write(new Text(tokens[1]), new Text(adapt(line)));
             }
-            // context.write(word, one);
         }
     }
 }
