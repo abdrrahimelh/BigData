@@ -1,5 +1,7 @@
 package Helper;
 
+import Camera.CameraT1;
+import Camera.CameraT2;
 import Radar.RadarTagmaster;
 import Radar.RadarViking;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -57,6 +59,12 @@ public class Helper {
         else if (type.equals("RADAR_TAGMASTER")) {
             return RadarTagmaster.class;
         }
+        else if (type.equals("CAMERA_T1")) {
+            return CameraT1.class;
+        }
+        else if (type.equals("CAMERA_T2")) {
+            return CameraT2.class;
+        }
         else {
             throw new IllegalArgumentException("Invalid type : " + type);
         }
@@ -68,6 +76,12 @@ public class Helper {
         }
         else if (type.equals("RADAR_TAGMASTER")) {
             return RadarTagmaster.RadarMapper.class;
+        }
+        else if (type.equals("CAMERA_T1")) {
+            return CameraT1.CamMapper.class;
+        }
+        else if (type.equals("CAMERA_T2")) {
+            return CameraT2.CamMapper.class;
         }
         else {
             throw new IllegalArgumentException("Invalid type : " + type);
