@@ -84,7 +84,7 @@ public class RadarViking {
             String line = value.toString();
             String[] tokens = line.split(",");
             if(isValid(line)){
-                context.write(new Text(tokens[1]), new Text(adapt(line)));
+                context.write(new Text(tokens[2]), new Text(adapt(line)));
             }
         }
     }

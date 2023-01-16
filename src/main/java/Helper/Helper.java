@@ -5,12 +5,17 @@ import Camera.CameraT2;
 import Radar.RadarTagmaster;
 import Radar.RadarViking;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.conf.Configuration;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Arrays;
 import java.util.List;
 public class Helper {
+    private Configuration conf;
+    public Helper(Configuration conf) {
+        this.conf=conf;
+    }
     public static String getSensorTypeFromPostName(String fileName) {
 
         int postId;
