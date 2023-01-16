@@ -1,5 +1,6 @@
 package Radar;
 
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -75,18 +76,18 @@ public class RadarTagmaster {
         str += adaptDate(tokens[0], tokens[1]) + ",";
         str += tokens[4] + ","; //vitesse
         str += adaptType(tokens[5]) + ",";
-        str += tokens[3] + ",";
+        str += tokens[3] ;
         return str;
     }
 
     public static class RadarMapper
-            extends Mapper<Object, Text, Text, Text> {
+            extends Mapper<Object, Text, NullWritable, Text> {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
             String[] tokens = line.split(",");
             if(isValid(line)){
-                context.write(new Text(tokens[1]), new Text(adapt(line)));
+                context.write(NullWritable.get(), new Text(adapt(line)));
             }
         }
     }

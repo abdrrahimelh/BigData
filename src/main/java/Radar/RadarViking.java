@@ -1,5 +1,6 @@
 package Radar;
 
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -62,6 +63,7 @@ public class RadarViking {
         String[] tokens = line.split(",");
         String str = "";
         str += "RADAR_VIKING";
+        str += ",";
         str += adaptDirection(tokens[0]) + ",";
         str += tokens[1] + ",";
         str += ",";
@@ -72,19 +74,19 @@ public class RadarViking {
         int ss = s/100;
         int c = s%100;
         str += hh + ":" + m + ":" + ss + ":" + c + ",";
-        str += tokens[4].substring(2);
-        str += tokens[6] + ",";
+        str += tokens[4].substring(2) + ",";
+        str += tokens[6];
         return str;
     }
 
     public static class RadarMapper
-            extends Mapper<Object, Text, Text, Text> {
+                extends Mapper<Object, Text, NullWritable, Text> {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
             String[] tokens = line.split(",");
             if(isValid(line)){
-                context.write(new Text(tokens[1]), new Text(adapt(line)));
+                context.write(NullWritable.get(), new Text(adapt(line)));
             }
         }
     }
