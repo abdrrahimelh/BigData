@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class CameraT2 {
     private static boolean isValidDate(String date, String time) {
-        String[] timewithoutc = time.split(".");
+        String[] timewithoutc = time.split("\\.");
         String[] timetoken = timewithoutc[0].split(":");
         String[] datetoken = date.split("/");
         int jour = Integer.parseInt(datetoken[2]);
@@ -38,7 +38,7 @@ public class CameraT2 {
         try {
             if (!isValidCategory(tokens[1])) return false;
             String[] horodate = tokens[2].split(" ");
-            if (!isValidDate(horodate[0], tokens[1])) return false;
+            if (!isValidDate(horodate[0], horodate[1])) return false;
 
         } catch (Exception e) {
             return false;
@@ -59,7 +59,7 @@ public class CameraT2 {
     }
 
     private static String adaptDate(String date, String time) {
-        String[] timewithoutc = time.split(".");
+        String[] timewithoutc = time.split("\\.");
         String[] timetoken = timewithoutc[0].split(":");
         String[] datetoken = date.split("/");
         return datetoken[2] + "," + datetoken[1] + "/" + datetoken[0] + "," + timewithoutc[0]+":"+ timewithoutc[1];

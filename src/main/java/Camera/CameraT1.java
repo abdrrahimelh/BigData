@@ -4,10 +4,11 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class CameraT1 {
     private static boolean isValidDate(String date, String time) {
-        String[] timewithoutc = time.split(".");
+        String[] timewithoutc = time.split("\\.");
         String[] timetoken = timewithoutc[0].split(":");
         String[] datetoken = date.split("/");
         int jour = Integer.parseInt(datetoken[2]);
@@ -37,17 +38,21 @@ public class CameraT1 {
 
     public static boolean isValid(String str) {
         String[] tokens = str.split(",");
-        //if (tokens.length != 6)
-        //    return false;
+        if(str.endsWith(",")) {
+            tokens = Arrays.copyOf(tokens, tokens.length + 1);
+            tokens[tokens.length - 1] = "";
+        }
+
         try {
             if (!isValidCategory(tokens[1])) return false;
             String[] horodate = tokens[2].split(" ");
-            if (!isValidDate(horodate[0], tokens[1])) return false;
             if (!isValidDirection(tokens[3], tokens[4])) return false;
+            if (!isValidDate(horodate[0], horodate[1])) return false;
 
         } catch (Exception e) {
             return false;
         }
+
         return true;
     }
 
