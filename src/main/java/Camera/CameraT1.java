@@ -1,5 +1,6 @@
 package Camera;
 
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
@@ -82,13 +83,13 @@ public class CameraT1 {
     }
 
     public static class CamMapper
-            extends Mapper<Object, Text, Text, Text> {
+            extends Mapper<Object, Text, NullWritable, Text> {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
             String[] tokens = line.split(",");
             if (isValid(line)) {
-                context.write(new Text(tokens[1]), new Text(adapt(line)));
+                context.write(NullWritable.get(), new Text(adapt(line)));
             }
             // context.write(word, one);
         }

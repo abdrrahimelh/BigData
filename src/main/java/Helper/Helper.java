@@ -16,9 +16,11 @@ public class Helper {
     public Helper(Configuration conf) {
         this.conf=conf;
     }
-    public static String getSensorTypeFromPostName(String fileName) {
+    public static String getSensorTypeFromPostName(String file) {
 
         int postId;
+        String[] filePath = file.split("/");
+        String fileName = filePath[filePath.length - 1];
         // Use regular expression to match the pattern of file name
         Pattern pattern = Pattern.compile("P(\\d+)(_\\w+)*\\.csv");
         Matcher matcher = pattern.matcher(fileName);
