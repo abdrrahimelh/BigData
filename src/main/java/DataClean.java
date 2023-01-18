@@ -14,12 +14,11 @@ public class DataClean {
 
     Configuration conf = new Configuration();
     conf.set("fileName",args[0]) ;
-    Helper helper = new Helper(conf);
-    String type = helper.getSensorTypeFromPostName(args[0]);
+    String type = Helper.getSensorTypeFromPostName(args[0]);
     Job job = Job.getInstance(conf, type);
     job.setNumReduceTasks(0);
-    job.setJarByClass(helper.getClassFromType(type));
-    job.setMapperClass(helper.getMapperFromType(type));
+    job.setJarByClass(Helper.getClassFromType(type));
+    job.setMapperClass(Helper.getMapperFromType(type));
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(Text.class);
     job.setOutputKeyClass(NullWritable.class);

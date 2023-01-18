@@ -7,22 +7,19 @@ import Radar.RadarViking;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.conf.Configuration;
 
+import java.io.Console;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Arrays;
 import java.util.List;
 public class Helper {
-    private Configuration conf;
-    public Helper(Configuration conf) {
-        this.conf=conf;
-    }
     public static String getSensorTypeFromPostName(String file) {
 
         int postId;
         String[] filePath = file.split("/");
-        String fileName = filePath[filePath.length - 1];
+        String fileName = filePath[filePath.length - 2];
         // Use regular expression to match the pattern of file name
-        Pattern pattern = Pattern.compile("P(\\d+)(_\\w+)*\\.csv");
+        Pattern pattern = Pattern.compile("P(\\d+)");
         Matcher matcher = pattern.matcher(fileName);
 
         // Check if the file name matches the pattern
@@ -93,5 +90,10 @@ public class Helper {
         else {
             throw new IllegalArgumentException("Invalid type : " + type);
         }
+    }
+
+    public static void main(String[] args) {
+        String filePath = "/user/auber/data_ple/citytraffic/ResultatCSV/P9/P9_Vers_Talence_1.csv";
+        System.out.println( getSensorTypeFromPostName(filePath));
     }
 }
