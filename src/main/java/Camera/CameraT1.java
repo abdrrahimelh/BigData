@@ -39,6 +39,7 @@ public class CameraT1 {
 
     public static boolean isValid(String str) {
         String[] tokens = str.split(",");
+
         if(str.endsWith(",")) {
             tokens = Arrays.copyOf(tokens, tokens.length + 1);
             tokens[tokens.length - 1] = "";
@@ -70,7 +71,7 @@ public class CameraT1 {
     }
 
     private static String adaptDate(String date, String time) {
-        String[] timewithoutc = time.split(".");
+        String[] timewithoutc = time.split("\\.");
         String[] timetoken = timewithoutc[0].split(":");
         String[] datetoken = date.split("/");
         return datetoken[2] + "," + datetoken[1] + "/" + datetoken[0] + "," + timewithoutc[0]+":"+ timewithoutc[1];
@@ -78,7 +79,12 @@ public class CameraT1 {
 
     private static String adapt(String line) {
         String[] tokens = line.split(",");
-        String str = "Camera";
+        if(line.endsWith(",")) {
+            tokens = Arrays.copyOf(tokens, tokens.length + 1);
+            tokens[tokens.length - 1] = "";
+        }
+
+        String str = "Camera,";
         str += adaptSens(tokens[3], tokens[4]) + ",";
         String[] horodate = tokens[2].split(" ");
         str += adaptDate(horodate[0], horodate[1]) + ",";
