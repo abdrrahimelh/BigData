@@ -67,7 +67,7 @@ public class CameraT2 {
 
     private static String adapt(String line) {
         String[] tokens = line.split(",");
-        String str = "Camera";
+        String str = "Camera,";
         str += adaptSens(tokens[3], tokens[4]) + ",";
         String[] horodate = tokens[2].split(" ");
         str += adaptDate(horodate[0], horodate[1]) + ",";
