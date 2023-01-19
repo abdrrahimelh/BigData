@@ -15,11 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 public class Helper {
 
-    public Integer getDirectionsRadar(String name){
-        Map<String, Integer> directions = new HashMap<>();
-        directions.put("Sort",2);
-        directions.put("Entr",1);
-        return directions.get(name);
+    public static String getDirectionsRadar(String filePath){
+        String[] file = filePath.split("/");
+        String fileName = file[file.length - 1];
+        String[] direction = fileName.split("_");
+        if (direction[1].startsWith("Sort")) return "2";
+        return "1";
     }
     public static String getSensorTypeFromPostName(String file) {
 

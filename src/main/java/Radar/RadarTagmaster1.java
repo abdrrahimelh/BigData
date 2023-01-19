@@ -11,36 +11,30 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RadarTagmaster1 {
-    private static boolean isValidDate(String horodate,  String centieme){
-        String[] date = horodate.split(" ")[0].split("/");
-        int jour = Integer.parseInt(date[0]);
-        int mois = Integer.parseInt(date[1]);
-        String[] time = horodate.split(" ")[1].split(":");
+    private static boolean isValidDate(String date ,String heuree,String secondes){
+        String[] datejour = date.split("/");
+        int jour = Integer.parseInt(datejour[0]);
+        int mois = Integer.parseInt(datejour[1]);
+        String[] time = heuree.split(":");
         int heure = Integer.parseInt(time[0]);
         int minutes = Integer.parseInt(time[1]);
-        int secondes = Integer.parseInt(time[2]);
+        int sec = Integer.parseInt(secondes);
         return (jour >= 1 && jour <= 31) && (mois >= 1 && mois <= 12) &&
                 (heure >= 1 && heure <= 23) && (minutes >= 1 && minutes <= 59) &&
-                (secondes >= 1 && secondes <= 59);
+                (sec >= 1 && sec <= 59);
     }
 
     private static boolean isValidType(String type){
         return type.startsWith("VL") || type.startsWith("2RM") ||
-                type.startsWith("PL") || type.equals("Bus") || type.equals("Deux roues");
+                type.startsWith("PL") || type.equals("Bus") || type.equals("Moto") || type.equals("Vélo");
     }
 
-    private static boolean isValidDirection(String direction){
-        List<String> validDirections = Arrays.asList("1", "2", "Sortie fac", "Entrée fac");
-        return validDirections.contains(direction);
-    }
+
 
     public static boolean isValid(String str) {
         String[] tokens = str.split(",");
-        if (tokens.length != 6) // or 7
-            return false;
         try {
-            if(!isValidDirection(tokens[2])) return false;
-            if(!isValidDate(tokens[0], tokens[1])) return false;
+            if(!isValidDate(tokens[0], tokens[1],tokens[2])) return false;
             if(!isValidType(tokens[5])) return false;
         } catch (Exception e) {
             return false;
@@ -48,24 +42,17 @@ public class RadarTagmaster1 {
         return true;
     }
 
-    private static String adaptDirection(String direction) {
-        if (direction.equals("Sortie fac")) return "2";
-        if (direction.equals("Entrée fac")) return "1";
-        return direction;
-    }
-
-    private static String adaptDate(String horodate, String centime) {
-        String[] date = horodate.split(" ")[0].split("/");
-        String heure = horodate.split(" ")[1];
-        return date[0] + "," + date[1] + "/" + date[2] + "," + heure + ":" + centime;
+    private static String adaptDate(String date ,String heure,String seconde, String centime) {
+        String[] datej = date.split("/");
+        return datej[0] + "," + datej[1] + "/" + datej[2] + "," + heure + ":"+seconde+":"+ centime;
     }
 
     private static String adaptType(String type) {
         if (type.startsWith("VL")) return "VL";
-        if (type.startsWith("2RM")) return "2RM";
+        if (type.startsWith("Vélo")) return "2R";
         if (type.startsWith("PL")) return "PL";
         if (type.equals("Bus")) return "PL";
-        if (type.equals("Deux roues")) return "2RM";
+        if (type.equals("Moto")) return "2R";
         return type;
     }
 
@@ -76,11 +63,10 @@ public class RadarTagmaster1 {
         str += Helper.getPosition(fileName);
         str+=",";
         str += "RADAR_TAGMASTER";
-        str += adaptDirection(tokens[2]) + ",";
-        str += adaptDate(tokens[0], tokens[1]) + ",";
+        str += Helper.getDirectionsRadar(fileName) + ",";
+        str += adaptDate(tokens[0], tokens[1],tokens[2],tokens[3]) + ",";
         str += tokens[4] + ","; //vitesse
         str += adaptType(tokens[5]) + ",";
-        str += tokens[3] ;
         return str;
     }
 
