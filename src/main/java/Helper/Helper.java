@@ -92,8 +92,9 @@ public class Helper {
         }
     }
 
-    public static void main(String[] args) {
-        String filePath = "/user/auber/data_ple/citytraffic/ResultatCSV/P9/P9_Vers_Talence_1.csv";
-        System.out.println( getSensorTypeFromPostName(filePath));
+    public static String getPosition(String filePath){
+        String[] file = filePath.split("/");
+        String fileName = file[file.length - 2];
+        return fileName;
     }
 }

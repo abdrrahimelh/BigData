@@ -1,5 +1,7 @@
 package Camera;
 
+import Helper.Helper;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -65,9 +67,11 @@ public class CameraT2 {
         return datetoken[2] + "," + datetoken[1] + "/" + datetoken[0] + "," + timewithoutc[0]+":"+ timewithoutc[1];
     }
 
-    private static String adapt(String line) {
+    private static String adapt(String line, String fileName) {
         String[] tokens = line.split(",");
-        String str = "Camera,";
+        String str = "";
+        str += Helper.getPosition(fileName);
+        str += "Camera,";
         str += adaptSens(tokens[3], tokens[4]) + ",";
         String[] horodate = tokens[2].split(" ");
         str += adaptDate(horodate[0], horodate[1]) + ",";
@@ -81,10 +85,12 @@ public class CameraT2 {
             extends Mapper<Object, Text, NullWritable, Text> {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            Configuration conf = context.getConfiguration();
+            String fileName = conf.get("fileName");
             String line = value.toString();
             String[] tokens = line.split(",");
             if (isValid(line)) {
-                context.write(NullWritable.get(), new Text(adapt(line)));
+                context.write(NullWritable.get(), new Text(adapt(line, fileName)));
             }
             // context.write(word, one);
         }

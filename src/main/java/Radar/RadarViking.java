@@ -1,5 +1,7 @@
 package Radar;
 
+import Helper.Helper;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -58,10 +60,11 @@ public class RadarViking {
         return direction;
     }
 
-    // CAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
-    private static String adapt(String line){
+    // CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
+    private static String adapt(String line, String fileName){
         String[] tokens = line.split(",");
         String str = "";
+        str += Helper.getPosition(fileName);
         str += "RADAR_VIKING";
         str += ",";
         str += adaptDirection(tokens[0]) + ",";
@@ -83,10 +86,12 @@ public class RadarViking {
                 extends Mapper<Object, Text, NullWritable, Text> {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            Configuration conf = context.getConfiguration();
+            String fileName = conf.get("fileName");
             String line = value.toString();
             String[] tokens = line.split(",");
             if(isValid(line)){
-                context.write(NullWritable.get(), new Text(adapt(line)));
+                context.write(NullWritable.get(), new Text(adapt(line, fileName)));
             }
         }
     }
