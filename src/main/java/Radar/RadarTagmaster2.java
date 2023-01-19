@@ -32,8 +32,9 @@ public class RadarTagmaster2 {
     }
 
     private static boolean isValidDirection(String direction){
-        List<String> validDirections = Arrays.asList("1", "2", "Sortie fac", "Entrée fac");
-        return validDirections.contains(direction);
+        return direction.equals("1") || direction.equals("2") ||
+                direction.contains("Entr") || direction.contains("Sortie") ||
+                direction.contains("entr") || direction.contains("sortie");
     }
 
     public static boolean isValid(String str) {
@@ -51,8 +52,8 @@ public class RadarTagmaster2 {
     }
 
     private static String adaptDirection(String direction) {
-        if (direction.equals("Sortie fac")) return "2";
-        if (direction.equals("Entrée fac")) return "1";
+        if (direction.contains("Sortie") || direction.contains("sortie")) return "2";
+        if (direction.contains("Entr") || direction.contains("entr")) return "1";
         return direction;
     }
 
@@ -64,23 +65,20 @@ public class RadarTagmaster2 {
 
     private static String adaptType(String type) {
         if (type.startsWith("VL")) return "VL";
-        if (type.startsWith("2RM")) return "2R";
-        if (type.startsWith("PL")) return "PL";
-        if (type.equals("Bus")) return "PL";
-        if (type.equals("Deux roues")) return "2R";
+        if (type.startsWith("2RM") || type.equals("Deux roues")) return "2R";
+        if (type.startsWith("PL") || type.equals("Bus")) return "PL";
         return type;
     }
 
     private static String adapt(String line, String fileName){
         String[] tokens = line.split(",");
         String str = "";
-        str += Helper.getPosition(fileName); //CAPTEUR(P?)
-        str+=",";
-        str += "RADAR_TAGMASTER"; //TYPECAPTEUR
+        str += Helper.getPosition(fileName) + ","; //CAPTEUR(P?)
+        str += "RADAR_TAGMASTER" + ","; //TYPECAPTEUR
         str += adaptDirection(tokens[2]) + ","; //SENS
         str += adaptDate(tokens[0], tokens[1]) + ","; //JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME
         str += tokens[3] + ","; //VITESSE
-        str += adaptType(tokens[7]) + ","; //TYPE VEHICULE
+        str += adaptType(tokens[7]); //TYPE VEHICULE
         return str;
     }
 
