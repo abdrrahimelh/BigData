@@ -5,6 +5,7 @@ import Camera.CameraT2;
 import Radar.RadarTagmaster1;
 import Radar.RadarTagmaster2;
 import Radar.RadarViking;
+import Tube.Tube;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.util.HashMap;
@@ -22,6 +23,30 @@ public class Helper {
         if (direction[1].startsWith("Sort")) return "2";
         return "1";
     }
+
+    public static int getDirectionsTube(String fileName){
+        String filePath[] = fileName.split("/") ;
+        String direction = filePath[filePath.length - 1];
+        Map<String, Integer> directions = new HashMap<>();
+        directions.put("P23_Vers_COSEC.csv",2);
+        directions.put("P23_Vers_BEC_1.csv",1);
+        directions.put("P23_Vers_BEC_2.csv",1);
+        directions.put("P24_Vers_Fac.csv", 1);
+        directions.put("P24_Vers_Rocade.csv", 2);
+        directions.put("P26_Vers_Fac_1.csv",1 );
+        directions.put("P26_Vers_Fac_2.csv", 1);
+        directions.put("P26_Vers_Fac_3.csv", 1);
+        directions.put("P26_Vers_Rocade_1.csv",2 );
+        directions.put("P26_Vers_Rocade_2.csv",2 );
+        directions.put("P19_Entree.csv",1);
+        directions.put("P19_Sortie.csv",2 );
+        directions.put("P9_Vers_Fac_1.csv",1);
+        directions.put("P9_Vers_Fac_2.csv",1);
+        directions.put("P9_Vers_Talence_1.csv",2);
+        directions.put("P9_Vers_Talence_2.csv",2);
+        return directions.get(direction);
+    }
+
     public static String getSensorTypeFromPostName(String file) {
 
         int postId;
@@ -84,6 +109,9 @@ public class Helper {
         else if (type.equals("CAMERA_T2")) {
             return CameraT2.class;
         }
+        else if (type.equals("TUBE_MIXTRA")) {
+            return Tube.class;
+        }
         else {
             throw new IllegalArgumentException("Invalid type : " + type);
         }
@@ -104,6 +132,9 @@ public class Helper {
         }
         else if (type.equals("CAMERA_T2")) {
             return CameraT2.CamMapper.class;
+        }
+        else if (type.equals("TUBE_MIXTRA")) {
+            return Tube.TubeMapper.class;
         }
         else {
             throw new IllegalArgumentException("Invalid type : " + type);
