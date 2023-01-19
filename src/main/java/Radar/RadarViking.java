@@ -55,8 +55,8 @@ public class RadarViking {
     }
 
     private static String adaptDirection(String direction) {
-        if (direction.equals("Sortie fac")) return "1";
-        if (direction.equals("Entrée fac")) return "2";
+        if (direction.equals("Sortie fac")) return "2";
+        if (direction.equals("Entrée fac")) return "1";
         return direction;
     }
 
@@ -65,6 +65,7 @@ public class RadarViking {
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);
+        str+=",";
         str += "RADAR_VIKING";
         str += ",";
         str += adaptDirection(tokens[0]) + ",";

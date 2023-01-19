@@ -49,8 +49,8 @@ public class RadarTagmaster {
     }
 
     private static String adaptDirection(String direction) {
-        if (direction.equals("Sortie fac")) return "1";
-        if (direction.equals("Entrée fac")) return "2";
+        if (direction.equals("Sortie fac")) return "2";
+        if (direction.equals("Entrée fac")) return "1";
         return direction;
     }
 
@@ -74,6 +74,7 @@ public class RadarTagmaster {
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);
+        str+=",";
         str += "RADAR_TAGMASTER";
         str += adaptDirection(tokens[2]) + ",";
         str += adaptDate(tokens[0], tokens[1]) + ",";

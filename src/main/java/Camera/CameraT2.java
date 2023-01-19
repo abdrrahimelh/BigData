@@ -71,6 +71,7 @@ public class CameraT2 {
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);
+        str+=",";
         str += "Camera,";
         str += adaptSens(tokens[3], tokens[4]) + ",";
         String[] horodate = tokens[2].split(" ");
