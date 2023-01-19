@@ -22,7 +22,8 @@ public class Tube {
     }
 
     private static boolean isValidCategory(String type){
-        return (type.equals("2R") || type.equals("VL") || type.equals("PL"));
+        return type.startsWith("VL") || type.startsWith("2RM") ||  type.startsWith("2R") ||
+        type.startsWith("PL") || type.equals("Bus") || type.equals("Deux roues");
     }
 
     public static boolean isValid(String str) {
@@ -46,19 +47,28 @@ public class Tube {
         return str;
     }
 
+    private static String adaptType(String type) {
+        if (type.startsWith("VL")) return "VL";
+        if (type.startsWith("2RM") || type.startsWith("2R")) return "2R";
+        if (type.startsWith("PL")) return "PL";
+        if (type.equals("Bus")) return "PL";
+        if (type.equals("Deux roues")) return "2RM";
+        return type;
+    }
+
     // CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
     private static String adapt(String line, String fileName){
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);
         str+=",";
-        str += "TUBE";
+        str += "TUBE_MIXTRA";
         str += ",";
-        //str += adaptDirection(fileName) ; TODO : add direction using helper
+        str += Helper.getDirectionsTube(fileName);
         str += ",";
         str+= adaptDate(tokens[0], tokens[1], tokens[2], tokens[3]) + ",";
         str += tokens[4] + ",";
-        str += tokens[5];
+        str += adaptType(tokens[5]);
         return str;
     }
 
