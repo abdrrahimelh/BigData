@@ -2,17 +2,25 @@ package Helper;
 
 import Camera.CameraT1;
 import Camera.CameraT2;
-import Radar.RadarTagmaster;
+import Radar.RadarTagmaster1;
+import Radar.RadarTagmaster2;
 import Radar.RadarViking;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.conf.Configuration;
 
-import java.io.Console;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Arrays;
 import java.util.List;
 public class Helper {
+
+    public Integer getDirectionsRadar(String name){
+        Map<String, Integer> directions = new HashMap<>();
+        directions.put("Sort",2);
+        directions.put("Entr",1);
+        return directions.get(name);
+    }
     public static String getSensorTypeFromPostName(String file) {
 
         int postId;
@@ -34,7 +42,8 @@ public class Helper {
         List<Integer> tube_mixtra = Arrays.asList(9, 11, 19, 23, 24, 26);
         List<Integer> tube_delta = Arrays.asList(15);
         List<Integer> rada_viking = Arrays.asList(4, 5, 17);
-        List<Integer> rada_tagmaster = Arrays.asList(2, 3);
+        List<Integer> radar_tagmaster1 = Arrays.asList(3);
+        List<Integer> radar_tagmaster2 = Arrays.asList(2);
         List<Integer> camera_1 = Arrays.asList(1, 6, 7, 8, 10, 12, 13, 14, 16, 18, 21, 22, 25, 27);
         List<Integer> camera_2 = Arrays.asList(20);
 
@@ -44,8 +53,10 @@ public class Helper {
             return "TUBE_DELTA";
         } else if (rada_viking.contains(postId)) {
             return "RADAR_VIKING";
-        } else if (rada_tagmaster.contains(postId)) {
-            return "RADAR_TAGMASTER";
+        } else if (radar_tagmaster1.contains(postId)) {
+            return "RADAR_TAGMASTER1";
+        } else if (radar_tagmaster2.contains(postId)) {
+            return "RADAR_TAGMASTER2";
         } else if (camera_1.contains(postId)) {
             return "CAMERA_T1";
         } else if (camera_2.contains(postId)) {
@@ -60,8 +71,11 @@ public class Helper {
         if (type.equals("RADAR_VIKING")) {
             return RadarViking.class;
         }
-        else if (type.equals("RADAR_TAGMASTER")) {
-            return RadarTagmaster.class;
+        else if (type.equals("RADAR_TAGMASTER1")) {
+            return RadarTagmaster1.class;
+        }
+        else if (type.equals("RADAR_TAGMASTER2")) {
+            return RadarTagmaster2.class;
         }
         else if (type.equals("CAMERA_T1")) {
             return CameraT1.class;
@@ -78,8 +92,11 @@ public class Helper {
         if (type.equals("RADAR_VIKING")) {
             return RadarViking.RadarMapper.class;
         }
-        else if (type.equals("RADAR_TAGMASTER")) {
-            return RadarTagmaster.RadarMapper.class;
+        else if (type.equals("RADAR_TAGMASTER1")) {
+            return RadarTagmaster1.RadarMapper.class;
+        }
+        else if (type.equals("RADAR_TAGMASTER2")) {
+            return RadarTagmaster2.RadarMapper.class;
         }
         else if (type.equals("CAMERA_T1")) {
             return CameraT1.CamMapper.class;

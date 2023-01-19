@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class RadarTagmaster {
+public class RadarTagmaster1 {
     private static boolean isValidDate(String horodate,  String centieme){
         String[] date = horodate.split(" ")[0].split("/");
         int jour = Integer.parseInt(date[0]);
