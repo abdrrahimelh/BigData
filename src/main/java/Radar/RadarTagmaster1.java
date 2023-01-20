@@ -62,11 +62,11 @@ public class RadarTagmaster1 {
         String str = "";
         str += Helper.getPosition(fileName);
         str+=",";
-        str += "RADAR_TAGMASTER";
+        str += "RADAR_TAGMASTER,";
         str += Helper.getDirectionsRadar(fileName) + ",";
         str += adaptDate(tokens[0], tokens[1],tokens[2],tokens[3]) + ",";
         str += tokens[4] + ","; //vitesse
-        str += adaptType(tokens[5]) + ",";
+        str += adaptType(tokens[5]);
         return str;
     }
 
