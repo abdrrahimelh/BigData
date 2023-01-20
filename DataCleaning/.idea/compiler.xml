@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="tp3-mapreduce" />
         <module name="BigData" />
+        <module name="DataCleaning" />
         <module name="mapreduce_radar" />
       </profile>
     </annotationProcessing>
