@@ -67,7 +67,7 @@ public class CameraT2 {
         return datetoken[2] + "," + datetoken[1] + "/" + datetoken[0] + "," + timewithoutc[0]+":"+ timewithoutc[1];
     }
 
-    private static String adapt(String line, String fileName) {
+    public static String adapt(String line, String fileName) {
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);

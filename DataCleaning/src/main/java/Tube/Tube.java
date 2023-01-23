@@ -57,7 +57,7 @@ public class Tube {
     }
 
     // CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
-    private static String adapt(String line, String fileName){
+    public static String adapt(String line, String fileName){
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);

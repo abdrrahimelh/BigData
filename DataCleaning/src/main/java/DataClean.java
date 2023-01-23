@@ -17,8 +17,8 @@ public class DataClean {
     String type = Helper.getSensorTypeFromPostName(args[0]);
     Job job = Job.getInstance(conf, type);
     job.setNumReduceTasks(0);
-    job.setJarByClass(Helper.getClassFromType(type));
-    job.setMapperClass(Helper.getMapperFromType(type));
+    job.setJarByClass(DataClean.class);
+    job.setMapperClass(Mapper.Mapper.class);
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(Text.class);
     job.setOutputKeyClass(NullWritable.class);

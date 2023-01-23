@@ -78,7 +78,7 @@ public class CameraT1 {
         return datetoken[2] + "," + datetoken[1] + "/" + datetoken[0] + "," + timewithoutc[0]+":"+ timewithoutc[1];
     }
 
-    private static String adapt(String line, String fileName) {
+    public static String adapt(String line, String fileName) {
         String[] tokens = line.split(",");
         if(line.endsWith(",")) {
             tokens = Arrays.copyOf(tokens, tokens.length + 1);

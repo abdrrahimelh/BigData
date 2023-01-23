@@ -70,7 +70,7 @@ public class RadarTagmaster2 {
         return type;
     }
 
-    private static String adapt(String line, String fileName){
+    public static String adapt(String line, String fileName){
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName) + ","; //CAPTEUR(P?)
