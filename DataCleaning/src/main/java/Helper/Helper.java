@@ -146,4 +146,8 @@ public class Helper {
         String fileName = file[file.length - 2];
         return fileName;
     }
+
+    public static String adaptInput(String filePath){
+        return "/user/auber/data_ple/citytraffic/ResultatCSV/"+filePath;
+    }
 }

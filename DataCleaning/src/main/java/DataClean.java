@@ -1,4 +1,5 @@
 import Helper.Helper;
+import Helper.Input;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
@@ -25,8 +26,10 @@ public class DataClean {
     job.setOutputValueClass(Text.class);
     job.setOutputFormatClass(TextOutputFormat.class);
     job.setInputFormatClass(TextInputFormat.class);
-    FileInputFormat.addInputPath(job, new Path(args[0]));
-    FileOutputFormat.setOutputPath(job, new Path(args[1]));
+    for (String str : Input.strings) {
+      FileInputFormat.addInputPath(job, new Path(Helper.adaptInput(str)));
+    }
+    FileOutputFormat.setOutputPath(job, new Path(args[0]));
     System.exit(job.waitForCompletion(true) ? 0 : 1);
   }
 }
