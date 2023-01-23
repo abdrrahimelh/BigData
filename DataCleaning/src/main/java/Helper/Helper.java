@@ -148,6 +148,7 @@ public class Helper {
     }
 
     public static String adaptInput(String filePath){
-        return "/user/auber/data_ple/citytraffic/ResultatCSV/"+filePath;
+
+        return "/user/auber/data_ple/citytraffic/ResultatCSV/".concat(filePath);
     }
 }
