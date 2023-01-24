@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<configuration>
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>lsd-prod-namenode-0.lsd.novalocal</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.property.clientPort</name>
+        <value>2181</value>
+    </property>
+    <property>
+        <name>hbase.master</name>
+        <value>lsd-prod-namenode-0.lsd.novalocal:60000</value>
+    </property>
+    <property>
+        <name>hbase.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+    <property>
+        <name>hbase.rpc.protection</name>
+        <value>authentication</value>
+    </property>
+    <property>
+        <name>hbase.regionserver.kerberos.principal</name>
+        <value>hbase/_HOST@LSD.NOVALOCAL</value>
+    </property>
+    <property>
+        <name>hbase.master.kerberos.principal</name>
+        <value>hbase/_HOST@LSD.NOVALOCAL</value>
+    </property>
+</configuration>
