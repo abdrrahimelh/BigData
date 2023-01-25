@@ -8,7 +8,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
 
-public class Tube {
+public class Tube implements Cleaner {
 
     private static boolean isValidDate(String date, String hour, String sec, String milli){
         int j = Integer.parseInt(date.split("/")[0]);
@@ -26,7 +26,8 @@ public class Tube {
         type.startsWith("PL") || type.equals("Bus") || type.equals("Deux roues");
     }
 
-    public static boolean isValid(String str) {
+    @Override
+    public boolean isValid(String str) {
         String[] tokens = str.split(",");
         //if (tokens.length != 7)
         //    return false;
@@ -56,8 +57,8 @@ public class Tube {
         return type;
     }
 
-    // CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
-    public static String adapt(String line, String fileName){
+    @Override
+    public String adapt(String line, String fileName){
         String[] tokens = line.split(",");
         String str = "";
         str += Helper.getPosition(fileName);
@@ -83,7 +84,6 @@ public class Tube {
             if (isValid(line)) {
                 context.write(NullWritable.get(), new Text(adapt(line, fileName)));
             }
-            // context.write(word, one);
         }
     }
 }

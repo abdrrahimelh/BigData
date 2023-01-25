@@ -93,54 +93,6 @@ public class Helper {
         }
     }
 
-    public static Class<?> getClassFromType(String type) {
-        if (type.equals("RADAR_VIKING")) {
-            return RadarViking.class;
-        }
-        else if (type.equals("RADAR_TAGMASTER1")) {
-            return RadarTagmaster1.class;
-        }
-        else if (type.equals("RADAR_TAGMASTER2")) {
-            return RadarTagmaster2.class;
-        }
-        else if (type.equals("CAMERA_T1")) {
-            return CameraT1.class;
-        }
-        else if (type.equals("CAMERA_T2")) {
-            return CameraT2.class;
-        }
-        else if (type.equals("TUBE_MIXTRA")) {
-            return Tube.class;
-        }
-        else {
-            throw new IllegalArgumentException("Invalid type : " + type);
-        }
-    }
-
-    public static Class<? extends Mapper> getMapperFromType(String type) {
-        if (type.equals("RADAR_VIKING")) {
-            return RadarViking.RadarMapper.class;
-        }
-        else if (type.equals("RADAR_TAGMASTER1")) {
-            return RadarTagmaster1.RadarMapper.class;
-        }
-        else if (type.equals("RADAR_TAGMASTER2")) {
-            return RadarTagmaster2.RadarMapper.class;
-        }
-        else if (type.equals("CAMERA_T1")) {
-            return CameraT1.CamMapper.class;
-        }
-        else if (type.equals("CAMERA_T2")) {
-            return CameraT2.CamMapper.class;
-        }
-        else if (type.equals("TUBE_MIXTRA")) {
-            return Tube.TubeMapper.class;
-        }
-        else {
-            throw new IllegalArgumentException("Invalid type : " + type);
-        }
-    }
-
     public static String getPosition(String filePath){
         String[] file = filePath.split("/");
         String fileName = file[file.length - 2];

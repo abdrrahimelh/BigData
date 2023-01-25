@@ -27,41 +27,9 @@ public class Mapper extends org.apache.hadoop.mapreduce.Mapper<Object, Text, Nul
         String type = Helper.getSensorTypeFromPostName(filePathString);
         fileName = filePath.getName();
         String line = value.toString();
-        if (type.equals("RADAR_VIKING")) {
-            if (RadarViking.isValid(line)) {
-                context.write(NullWritable.get(), new Text(RadarViking.adapt(line, filePathString)));
-            }
+        Cleaner cleaner = CleanerFactory.getCleaner(type);
+        if (cleaner.isValid(line)) {
+            context.write(NullWritable.get(), new Text(cleaner.adapt(line, filePathString)));
         }
-        else if (type.equals("RADAR_TAGMASTER1")) {
-            if (RadarTagmaster1.isValid(line)) {
-                context.write(NullWritable.get(), new Text(RadarTagmaster1.adapt(line, filePathString)));
-            }
-        }
-        else if (type.equals("RADAR_TAGMASTER2")) {
-            if (RadarTagmaster2.isValid(line)) {
-                context.write(NullWritable.get(), new Text(RadarTagmaster2.adapt(line, filePathString)));
-            }
-        }
-        else if (type.equals("CAMERA_T1")) {
-            if (CameraT1.isValid(line)) {
-                context.write(NullWritable.get(), new Text(CameraT1.adapt(line, filePathString)));
-            }
-        }
-        else if (type.equals("CAMERA_T2")) {
-            if (CameraT2.isValid(line)) {
-                context.write(NullWritable.get(), new Text(CameraT2.adapt(line, filePathString)));
-            }
-        }
-        else if (type.equals("TUBE_MIXTRA")) {
-            if (Tube.isValid(line)) {
-                context.write(NullWritable.get(), new Text(Tube.adapt(line, filePathString)));
-            }
-        }
-        else {
-            throw new IllegalArgumentException("Invalid type : " + type);
-        }
-
-        // context.write(word, one);
     }
-
 }
