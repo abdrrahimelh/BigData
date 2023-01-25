@@ -1,5 +1,6 @@
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.fs.Path;
@@ -8,18 +9,15 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableReducer;
 import java.io.IOException;
-import org.apache.hadoop.hbase.client.Put;
+
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 
 public class WriteToHBase {
-	private static final String TABLE_NAME = "fzanonboito:worldcitiespop_test"; //IL FAUT CHANGER LE NAMESPACE
+	private static final String TABLE_NAME = "helfani:sensor_test"; //IL FAUT CHANGER LE NAMESPACE
 
 	public static class WriteReducer extends TableReducer<LongWritable, Text, Text> {
 		@Override
@@ -27,11 +25,18 @@ public class WriteToHBase {
 			// something that need to be done at start of reducer
 		}
 
+
+		///CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
+		private Put getPutFromLine(Text val, LongWritable key){
+			Put put = new Put(key.toString().getBytes());
+			put.addColumn(Bytes.toBytes("Difference"), Bytes.toBytes("Difference"), val.toString().getBytes());
+			return put;
+		}
+
 		@Override
 		public void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			for (Text val : values) {
-				Put put = new Put(key.toString().getBytes());
-				put.addColumn(Bytes.toBytes("line"), Bytes.toBytes("line"), val.toString().getBytes());
+				Put put = getPutFromLine(val, key);
 				context.write(new Text(key.toString()), put);
 			}
 		}
@@ -47,10 +52,13 @@ public class WriteToHBase {
 	public static void createTable(Connection connect) {
 		try {
 			final Admin admin = connect.getAdmin();
-			HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(TABLE_NAME));
-			HColumnDescriptor fam = new HColumnDescriptor(Bytes.toBytes("line"));
-			tableDescriptor.addFamily(fam);
-			createOrOverwrite(admin, tableDescriptor);
+			TableDescriptorBuilder tableDescriptorBuilder = TableDescriptorBuilder.newBuilder(TableName.valueOf(TABLE_NAME));
+			ColumnFamilyDescriptor columnFamilyDescriptor = ColumnFamilyDescriptorBuilder.newBuilder("Difference".getBytes()).build();
+			tableDescriptorBuilder.setColumnFamily(columnFamilyDescriptor);
+			TableDescriptor tableDescriptor = tableDescriptorBuilder.build();
+			if (!admin.tableExists(TableName.valueOf(TABLE_NAME))) {
+				admin.createTable(tableDescriptor);
+			}
 			admin.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,14 +67,14 @@ public class WriteToHBase {
 	}
 
 	public static void main (String[] args) throws Exception {
-		Configuration conf = new HBaseConfiguration();
+		Configuration conf =  HBaseConfiguration.create();
 		Job job = Job.getInstance(conf, "Write to HBase example");
 		job.setJarByClass(WriteToHBase.class);
 		//create the table (sequential part)
 		Connection connection = ConnectionFactory.createConnection(conf);
 		createTable(connection);
 		//input from HDFS file
-		FileInputFormat.addInputPath(job, new Path("/user/auber/data_ple/worldcitiespop.txt"));
+		FileInputFormat.addInputPath(job, new Path(args[0]));
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setMapOutputKeyClass(LongWritable.class);
 		job.setMapOutputValueClass(Text.class);
