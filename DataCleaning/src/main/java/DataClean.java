@@ -16,9 +16,7 @@ public class DataClean {
   public static void main(String[] args) throws Exception {
 
     Configuration conf = new Configuration();
-    conf.set("fileName",args[0]) ;
-    String type = Helper.getSensorTypeFromPostName(args[0]);
-    Job job = Job.getInstance(conf, type);
+    Job job = Job.getInstance(conf, "cleaning");
     job.setNumReduceTasks(0);
     job.setJarByClass(DataClean.class);
     job.setMapperClass(Mapper.class);

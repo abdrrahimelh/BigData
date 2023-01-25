@@ -15,12 +15,10 @@ public class Mapper extends org.apache.hadoop.mapreduce.Mapper<Object, Text, Nul
     @Override
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         Configuration conf = context.getConfiguration();
-        String fileName = conf.get("fileName");
         InputSplit split = context.getInputSplit();
         Path filePath = ((FileSplit) split).getPath();
         String filePathString = filePath.toString();
         String type = Helper.getSensorTypeFromPostName(filePathString);
-        fileName = filePath.getName();
         String line = value.toString();
         DataCleaner cleaner = DataCleanerFactory.getCleaner(type);
         if (cleaner.isValid(line)) {
