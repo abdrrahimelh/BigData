@@ -1,14 +1,10 @@
 package Camera;
 
 import Helper.Helper;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-import java.io.IOException;
 import java.util.Arrays;
+import Prototype.DataCleaner;
 
-public class CameraT1 implements Cleaner {
+public class CameraT1 implements DataCleaner {
     @Override
     public boolean isValid(String str) {
         String[] tokens = str.split(",");

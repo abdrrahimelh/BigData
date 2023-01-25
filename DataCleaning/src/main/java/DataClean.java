@@ -1,3 +1,5 @@
+
+
 import Helper.Helper;
 import Helper.Input;
 import org.apache.hadoop.conf.Configuration;
@@ -19,7 +21,7 @@ public class DataClean {
     Job job = Job.getInstance(conf, type);
     job.setNumReduceTasks(0);
     job.setJarByClass(DataClean.class);
-    job.setMapperClass(Mapper.Mapper.class);
+    job.setMapperClass(Mapper.class);
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(Text.class);
     job.setOutputKeyClass(NullWritable.class);

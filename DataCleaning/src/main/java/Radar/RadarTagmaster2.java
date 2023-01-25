@@ -1,16 +1,10 @@
 package Radar;
 
 import Helper.Helper;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import Prototype.DataCleaner;
 
-public class RadarTagmaster2 implements Cleaner {
+public class RadarTagmaster2 implements DataCleaner {
     @Override
     public boolean isValid(String str) {
         String[] tokens = str.split(",");

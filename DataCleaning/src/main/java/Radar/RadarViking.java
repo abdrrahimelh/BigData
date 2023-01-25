@@ -1,14 +1,10 @@
 package Radar;
 
 import Helper.Helper;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
 
-import java.io.IOException;
+import Prototype.DataCleaner;
 
-public class RadarViking implements Cleaner {
+public class RadarViking implements DataCleaner {
     @Override
     public boolean isValid(String str) {
         String[] tokens = str.split(",");
