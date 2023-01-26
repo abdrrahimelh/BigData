@@ -1,5 +1,3 @@
-
-
 import Helper.Helper;
 import Helper.Input;
 import org.apache.hadoop.conf.Configuration;
@@ -10,6 +8,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class DataClean {
@@ -17,14 +16,14 @@ public class DataClean {
 
     Configuration conf = new Configuration();
     Job job = Job.getInstance(conf, "cleaning");
-    job.setNumReduceTasks(0);
+    job.setNumReduceTasks(1);
     job.setJarByClass(DataClean.class);
     job.setMapperClass(Mapper.class);
-    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputKeyClass(NullWritable.class);
     job.setMapOutputValueClass(Text.class);
     job.setOutputKeyClass(NullWritable.class);
     job.setOutputValueClass(Text.class);
-    job.setOutputFormatClass(TextOutputFormat.class);
+    job.setOutputFormatClass(SequenceFileOutputFormat.class);
     job.setInputFormatClass(TextInputFormat.class);
     for (String str : Input.strings) {
       FileInputFormat.addInputPath(job, new Path(Helper.adaptInput(str)));
