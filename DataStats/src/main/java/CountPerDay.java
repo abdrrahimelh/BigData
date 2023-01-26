@@ -18,20 +18,21 @@ public class CountPerDay {
     }
 
     public static class TestAnalyzeReducer
-            extends Reducer<Text, Text, Text, Integer> {
+            extends Reducer<Text, Text, Text, Text> {
         public void reduce(Text key, Iterable<Text> values,
                            Context context) throws IOException, InterruptedException {
-            int count = 0;
+            int entrees = 0;
+            int sorties = 0;
             for (Text t : values) {
                 String[] tokens = t.toString().split(",");
                 if(tokens[2].equals("1")){
-                    count++;
+                    entrees++;
                 }
                 else {
-                    count--;
+                    sorties++;
                 }
             }
-            context.write(key, count);
+            context.write(key, new Text(entrees+","+sorties));
         }
     }
 }

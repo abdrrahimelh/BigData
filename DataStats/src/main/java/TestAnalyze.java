@@ -21,7 +21,7 @@ public class TestAnalyze {
 
         Job job = Job.getInstance(conf, "TestAnalyze");
 
-        job.setNumReduceTasks(5);
+        job.setNumReduceTasks(1);
 
 
         job.setJarByClass(CountPerDay.class);
@@ -30,7 +30,7 @@ public class TestAnalyze {
         job.setMapOutputValueClass(Text.class);
         job.setReducerClass(CountPerDay.TestAnalyzeReducer.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Integer.class);
+        job.setOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setInputFormatClass(SequenceFileInputFormat.class);
 
