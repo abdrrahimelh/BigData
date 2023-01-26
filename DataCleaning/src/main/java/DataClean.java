@@ -16,10 +16,10 @@ public class DataClean {
 
     Configuration conf = new Configuration();
     Job job = Job.getInstance(conf, "cleaning");
-    job.setNumReduceTasks(0);
+    job.setNumReduceTasks(1);
     job.setJarByClass(DataClean.class);
     job.setMapperClass(Mapper.class);
-    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputKeyClass(NullWritable.class);
     job.setMapOutputValueClass(Text.class);
     job.setOutputKeyClass(NullWritable.class);
     job.setOutputValueClass(Text.class);
