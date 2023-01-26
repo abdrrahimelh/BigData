@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>bigdata</groupId>
   <artifactId>data-clean</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <name>Minimal MapReduce app skeleton</name>
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
