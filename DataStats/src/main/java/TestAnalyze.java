@@ -6,6 +6,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
@@ -31,7 +32,7 @@ public class TestAnalyze {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Integer.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        job.setInputFormatClass(TextInputFormat.class);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
 
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
@@ -39,6 +40,7 @@ public class TestAnalyze {
 
         job.waitForCompletion(true);
 
+        /*
         Job job1 = Job.getInstance(conf, "3alamkhor");
         job1.setNumReduceTasks(2);
 
@@ -74,6 +76,6 @@ public class TestAnalyze {
         FileInputFormat.addInputPath(job2, new Path(args[0]));
         FileOutputFormat.setOutputPath(job2, new Path(args[3]));
 
-        job2.waitForCompletion(true);
+        job2.waitForCompletion(true);*/
     }
 }
