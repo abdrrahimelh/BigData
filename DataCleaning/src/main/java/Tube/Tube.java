@@ -1,14 +1,39 @@
 package Tube;
 
 import Helper.Helper;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
 
-import java.io.IOException;
+import Prototype.DataCleaner;
 
-public class Tube {
+public class Tube implements DataCleaner {
+    @Override
+    public boolean isValid(String str) {
+        String[] tokens = str.split(",");
+        //if (tokens.length != 7)
+        //    return false;
+        try {
+            if(!isValidDate(tokens[0], tokens[1], tokens[2], tokens[3])) return false;
+            if(!isValidCategory(tokens[5])) return false;
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String adapt(String line, String fileName){
+        String[] tokens = line.split(",");
+        String str = "";
+        str += Helper.getPosition(fileName);
+        str+=",";
+        str += "TUBE_MIXTRA";
+        str += ",";
+        str += Helper.getDirectionsTube(fileName);
+        str += ",";
+        str+= adaptDate(tokens[0], tokens[1], tokens[2], tokens[3]) + ",";
+        str += tokens[4] + ",";
+        str += adaptType(tokens[5]);
+        return str;
+    }
 
     private static boolean isValidDate(String date, String hour, String sec, String milli){
         int j = Integer.parseInt(date.split("/")[0]);
@@ -26,19 +51,6 @@ public class Tube {
         type.startsWith("PL") || type.equals("Bus") || type.equals("Deux roues");
     }
 
-    public static boolean isValid(String str) {
-        String[] tokens = str.split(",");
-        //if (tokens.length != 7)
-        //    return false;
-        try {
-            if(!isValidDate(tokens[0], tokens[1], tokens[2], tokens[3])) return false;
-            if(!isValidCategory(tokens[5])) return false;
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
     private static String adaptDate(String date, String hour, String sec, String milli){
         String str = "";
         str += date.substring(0, date.indexOf('/')) + ","; //JOUR
@@ -54,36 +66,5 @@ public class Tube {
         if (type.equals("Bus")) return "PL";
         if (type.equals("Deux roues")) return "2RM";
         return type;
-    }
-
-    // CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
-    public static String adapt(String line, String fileName){
-        String[] tokens = line.split(",");
-        String str = "";
-        str += Helper.getPosition(fileName);
-        str+=",";
-        str += "TUBE_MIXTRA";
-        str += ",";
-        str += Helper.getDirectionsTube(fileName);
-        str += ",";
-        str+= adaptDate(tokens[0], tokens[1], tokens[2], tokens[3]) + ",";
-        str += tokens[4] + ",";
-        str += adaptType(tokens[5]);
-        return str;
-    }
-
-    public static class TubeMapper
-            extends Mapper<Object, Text, NullWritable, Text> {
-        @Override
-        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            Configuration conf = context.getConfiguration();
-            String fileName = conf.get("fileName");
-            String line = value.toString();
-            String[] tokens = line.split(",");
-            if (isValid(line)) {
-                context.write(NullWritable.get(), new Text(adapt(line, fileName)));
-            }
-            // context.write(word, one);
-        }
     }
 }
