@@ -12,33 +12,41 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class TestAnalyze {
 
     public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();
 
+        String[] AnalysisArray = {
+                "in_out_per_day",
+                "in_out_per_hour",
+                "in_out_per_sensor_hour",
+                "speed_per_hour",
+        };
 
-        Job job = Job.getInstance(conf, "TestAnalyze");
+        for(String type : AnalysisArray){
+            Configuration conf = new Configuration();
+            conf.set("analyze_type",type);
+            Job job = Job.getInstance(conf, "TestAnalyze");
 
-        job.setNumReduceTasks(1);
+            job.setNumReduceTasks(1);
 
+            job.setJarByClass(AnalyzeExecutor.class);
+            job.setMapperClass(AnalyzeExecutor.AnalyzeMapper.class);
+            job.setMapOutputKeyClass(Text.class);
+            job.setMapOutputValueClass(Text.class);
+            job.setReducerClass(AnalyzeExecutor.AnalyzeReducer.class);
+            job.setOutputKeyClass(Text.class);
+            job.setOutputValueClass(Text.class);
+            job.setOutputFormatClass(TextOutputFormat.class);
+            job.setInputFormatClass(SequenceFileInputFormat.class);
 
-        job.setJarByClass(CountPerDay.class);
-        job.setMapperClass(CountPerDay.TestAnalyzeMapper.class);
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
-        job.setReducerClass(CountPerDay.TestAnalyzeReducer.class);
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
-        job.setOutputFormatClass(TextOutputFormat.class);
-        job.setInputFormatClass(SequenceFileInputFormat.class);
+            FileInputFormat.addInputPath(job, new Path(args[0]));
+            FileOutputFormat.setOutputPath(job, new Path(args[1]+"/"+type));
 
-
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-        job.waitForCompletion(true);
+            job.waitForCompletion(true);
+        }
 
         /*
         Job job1 = Job.getInstance(conf, "3alamkhor");

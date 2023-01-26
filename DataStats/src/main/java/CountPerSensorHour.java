@@ -4,7 +4,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-public class CountPerHour implements Analyze{
+public class CountPerSensorHour implements Analyze {
 
     public  Text getValue(Iterable<Text> values){
         int entrees = 0;
@@ -24,7 +24,7 @@ public class CountPerHour implements Analyze{
     public  Text map(Text value){
         String line = value.toString();
         String[] tokens = line.split(",");
-        return new Text(tokens[5].split(":")[0]);
+        return new Text(tokens[0] + "," + tokens[5].split(":")[0]);
     }
 
     public boolean isValidline(){
