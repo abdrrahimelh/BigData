@@ -17,7 +17,7 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 
 public class WriteToHBase {
-	private static final String TABLE_NAME = "helfani:sensor_test"; //IL FAUT CHANGER LE NAMESPACE
+	private static final String TABLE_NAME = "helfani:stat_perday"; //IL FAUT CHANGER LE NAMESPACE
 
 	public static class WriteReducer extends TableReducer<LongWritable, Text, Text> {
 		@Override
@@ -27,16 +27,17 @@ public class WriteToHBase {
 
 
 		///CAPTEUR(P?),TYPECAPTEUR,SENS,JOUR,MOIS/ANNEE,HEURE:MINUTE:SECONDE:CENTIEME,VITESSE,TYPE VEHICULE
-		private Put getPutFromLine(Text val, LongWritable key){
+		private Put getPutFromLine(LongWritable key ,  Text val ){
 			Put put = new Put(key.toString().getBytes());
-			put.addColumn(Bytes.toBytes("Difference"), Bytes.toBytes("Difference"), val.toString().getBytes());
+			put.addColumn(Bytes.toBytes("Data"), Bytes.toBytes("entrée"), val.toString().split(",")[0].getBytes());
+			put.addColumn(Bytes.toBytes("Data"), Bytes.toBytes("sortie"), val.toString().split(",")[1].getBytes());
 			return put;
 		}
 
 		@Override
 		public void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			for (Text val : values) {
-				Put put = getPutFromLine(val, key);
+				Put put = getPutFromLine(key , val);
 				context.write(new Text(key.toString()), put);
 			}
 		}
@@ -53,7 +54,7 @@ public class WriteToHBase {
 		try {
 			final Admin admin = connect.getAdmin();
 			TableDescriptorBuilder tableDescriptorBuilder = TableDescriptorBuilder.newBuilder(TableName.valueOf(TABLE_NAME));
-			ColumnFamilyDescriptor columnFamilyDescriptor = ColumnFamilyDescriptorBuilder.newBuilder("Difference".getBytes()).build();
+			ColumnFamilyDescriptor columnFamilyDescriptor = ColumnFamilyDescriptorBuilder.newBuilder("Data".getBytes()).build();
 			tableDescriptorBuilder.setColumnFamily(columnFamilyDescriptor);
 			TableDescriptor tableDescriptor = tableDescriptorBuilder.build();
 			if (!admin.tableExists(TableName.valueOf(TABLE_NAME))) {
